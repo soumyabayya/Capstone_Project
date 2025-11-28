@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+
+{% block title %}SRU-Health Care Center{% endblock %}
+
+{% block content %}
+<!-- main form of page -->
+<h1 class="mt-4 my-4 text-center text-green">SRU-Health Care Center</h1>
+<div class="container my-4 mt-4" style="background: black; color: white; border-radius: 15px; padding: 40px;">
+    <form action="/predict" method="post">
+        <div class="form-group">
+            <label for="symptoms">Select Symptoms:</label>
+            <input type="text" class="form-control", id="symptoms" name="symptoms" placeholder="type systems such as itching, sleeping, aching etc" value="{{ symptoms if symptoms else '' }}">
+        </div>
+        <br>
+        <button type="button" id="startSpeechRecognition" class="btn btn-primary" style="margin-left:3px;border:1px solid white; border-radius:20px;">
+            Start Speech Recognition
+        </button>
+        <br>
+
+        <!-- Display the transcribed text here -->
+        <div name="mysysms" id="transcription" style="margin-top: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #f8f9fa; min-height: 20px;">{{ symptoms if symptoms else '' }}</div>
+        <div id="speechStatus" style="margin-top: 5px; font-style: italic; color: #666;"></div>
+
+        {% if message %}
+        <p>{{ message }}</p>
+        {% endif %}
+        <br>
+
+        <button type="submit" class="btn btn-danger btn-lg" style="width: 100%; padding: 14px; margin-bottom: 5px;">Predict</button>
+        
+        <!-- Reset button to clear symptoms -->
+        <button type="button" id="resetSymptoms" class="btn btn-secondary" style="width: 100%; padding: 14px; margin-top: 5px;">Reset Symptoms</button>
+    </form>
+</div>
+
+{% if predicted_disease %}
+<!-- Results displayed directly on page without popups -->
+<h1 class="text-center my-4 mt-4">Our AI System Results</h1>
+<div class="container">
+    <div class="result-container">
+        <!-- Disease Result -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color: #F39334; color: black; font-weight: bold;">
+                Predicted Disease
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ predicted_disease }}</p>
+            </div>
+        </div>
+
+        <!-- Description Result -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color: #268AF3; color: black; font-weight: bold;">
+                Description
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ dis_des }}</p>
+            </div>
+        </div>
+
+        <!-- Precaution Result -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color: #F371F9; color: black; font-weight: bold;">
+                Precaution
+            </div>
+            <div class="card-body">
+                <ul>
+                    {% for i in my_precautions %}
+                        <li>{{ i }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Medications Result -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color: #F8576F; color: black; font-weight: bold;">
+                Medications
+            </div>
+            <div class="card-body">
+                <ul>
+                    {% for i in medications %}
+                        <li>{{ i }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Workouts Result -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color: #99F741; color: black; font-weight: bold;">
+                Workouts
+            </div>
+            <div class="card-body">
+                <ul>
+                    {% for i in workout %}
+                        <li>{{ i }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Diets Result -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color: #E5E23D; color: black; font-weight: bold;">
+                Diets
+            </div>
+            <div class="card-body">
+                <ul>
+                    {% for i in my_diet %}
+                        <li>{{ i }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Doctor Recommendation Result -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color: #41F7E5; color: black; font-weight: bold;">
+                Doctor Recommendation
+            </div>
+            <div class="card-body">
+                <p class="card-text"><strong>Recommended Specialist:</strong> {{ doctor_recommendation }}</p>
+                <p class="card-text">Based on the predicted disease, you should consult a <strong>{{ doctor_recommendation }}</strong> for proper diagnosis and treatment.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+    const startSpeechRecognitionButton = document.getElementById('startSpeechRecognition');
+    const resetSymptomsButton = document.getElementById('resetSymptoms');
+    const transcriptionDiv = document.getElementById('transcription');
+    const speechStatusDiv = document.getElementById('speechStatus');
+    const symptomsInput = document.getElementById('symptoms');
+
+    startSpeechRecognitionButton.addEventListener('click', startSpeechRecognition);
+    resetSymptomsButton.addEventListener('click', resetSymptoms);
+
+    // Store all recognized symptoms
+    let allSymptoms = '';
+
+    function startSpeechRecognition() {
+        // Check if speech recognition is supported
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            speechStatusDiv.textContent = 'Speech recognition is not supported in your browser. Please try Chrome or Edge.';
+            return;
+        }
+
+        // Use the appropriate speech recognition API
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+
+        recognition.lang = 'en-US'; // Set the language for recognition
+        recognition.continuous = true; // Keep listening for continuous recognition
+        recognition.interimResults = true; // Show interim results for better user feedback
+        recognition.maxAlternatives = 3; // Get multiple alternatives for better accuracy
+
+        recognition.onstart = function() {
+            startSpeechRecognitionButton.textContent = 'Listening...';
+            startSpeechRecognitionButton.disabled = true;
+            if (transcriptionDiv.textContent === '' || transcriptionDiv.textContent === 'Listening...') {
+                transcriptionDiv.textContent = 'Listening...';
+            }
+            speechStatusDiv.textContent = 'Please speak clearly into your microphone...';
+        };
+
+        recognition.onresult = function (event) {
+            let finalTranscript = '';
+            let interimTranscript = '';
+            
+            // Process all results
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    finalTranscript += transcript;
+                } else {
+                    interimTranscript += transcript;
+                }
+            }
+            
+            // Clean the speech input with enhanced cleaning
+            let cleanedResult = '';
+            if (finalTranscript) {
+                cleanedResult = cleanSpeechInput(finalTranscript);
+            } else if (interimTranscript) {
+                cleanedResult = cleanSpeechInput(interimTranscript);
+            }
+            
+            // Only update if we have meaningful content
+            if (cleanedResult && cleanedResult.trim() !== '') {
+                // Append new symptoms to existing ones
+                if (allSymptoms.length > 0 && finalTranscript) {
+                    allSymptoms += ' ' + cleanedResult;
+                } else if (finalTranscript) {
+                    allSymptoms = cleanedResult;
+                }
+                
+                // Update display with final results only
+                if (finalTranscript) {
+                    transcriptionDiv.textContent = allSymptoms;
+                    // Set the symptoms input field with all transcribed text
+                    symptomsInput.value = allSymptoms;
+                    speechStatusDiv.textContent = 'Speech recognized. You can continue speaking or click Predict.';
+                } else {
+                    // Show interim results without updating allSymptoms
+                    transcriptionDiv.textContent = allSymptoms + (allSymptoms ? ' ' : '') + cleanedResult;
+                }
+            }
+        };
+
+        recognition.onerror = function(event) {
+            console.error('Speech recognition error', event.error);
+            if (transcriptionDiv.textContent === 'Listening...') {
+                transcriptionDiv.textContent = allSymptoms; // Restore previous symptoms
+            }
+            speechStatusDiv.textContent = 'Error: ' + event.error;
+            startSpeechRecognitionButton.textContent = 'Start Speech Recognition';
+            startSpeechRecognitionButton.disabled = false;
+            
+            // Handle specific errors
+            if (event.error === 'not-allowed') {
+                speechStatusDiv.textContent = 'Microphone access denied. Please allow microphone access in your browser settings and try again.';
+            } else if (event.error === 'no-speech') {
+                speechStatusDiv.textContent = 'No speech detected. Please click the button again and speak clearly.';
+            } else if (event.error === 'audio-capture') {
+                speechStatusDiv.textContent = 'Audio capture error. Please check your microphone and try again.';
+            } else {
+                speechStatusDiv.textContent = 'Speech recognition error: ' + event.error + '. Please try again.';
+            }
+        };
+
+        recognition.onend = function () {
+            console.log('Speech recognition ended.');
+            startSpeechRecognitionButton.textContent = 'Start Speech Recognition';
+            startSpeechRecognitionButton.disabled = false;
+            
+            // If no results were captured, restore previous symptoms
+            if (transcriptionDiv.textContent === 'Listening...') {
+                transcriptionDiv.textContent = allSymptoms;
+            }
+            
+            // Automatically restart for continuous recognition if we're still expecting input
+            // This helps with longer inputs
+            if (startSpeechRecognitionButton.disabled) {
+                try {
+                    recognition.start();
+                } catch (e) {
+                    console.log('Could not restart recognition:', e);
+                }
+            }
+        };
+
+        try {
+            recognition.start();
+        } catch (e) {
+            console.error('Speech recognition start error', e);
+            transcriptionDiv.textContent = allSymptoms; // Restore previous symptoms
+            speechStatusDiv.textContent = 'Error starting speech recognition: ' + e.message;
+            startSpeechRecognitionButton.textContent = 'Start Speech Recognition';
+            startSpeechRecognitionButton.disabled = false;
+        }
+    }
+
+    // Enhanced speech input cleaning function with fuzzy matching capabilities
+    function cleanSpeechInput(text) {
+        if (!text) return '';
+        
+        // Convert to lowercase
+        let cleaned = text.toLowerCase();
+        
+        // Remove punctuation but preserve spaces
+        cleaned = cleaned.replace(/[^a-zA-Z0-9\s]/g, '');
+        
+        // Replace multiple spaces with single space and trim
+        cleaned = cleaned.replace(/\s+/g, ' ').trim();
+        
+        // Apply fuzzy matching for common mispronunciations
+        const fuzzyCorrections = {
+            'feaver': 'fever',
+            'fevr': 'fever',
+            'couh': 'cough',
+            'cugh': 'cough',
+            'colt': 'cold',
+            'codl': 'cold',
+            'headack': 'headache',
+            'headace': 'headache',
+            'stomac': 'stomach',
+            'stomache': 'stomach',
+            'throte': 'throat',
+            'sorn': 'sore',
+            'soar': 'sore',
+            'paine': 'pain',
+            'aching': 'ache',
+            'runny nose': 'runny nose',
+            'sore throat': 'sore throat',
+            'body pain': 'body pain',
+            'chest pain': 'chest pain'
+        };
+        
+        // Apply corrections
+        for (const [mispronounced, correct] of Object.entries(fuzzyCorrections)) {
+            cleaned = cleaned.replace(new RegExp('\\b' + mispronounced + '\\b', 'g'), correct);
+        }
+        
+        return cleaned;
+    }
+
+    function resetSymptoms() {
+        allSymptoms = '';
+        transcriptionDiv.textContent = '';
+        symptomsInput.value = '';
+        speechStatusDiv.textContent = 'Symptoms have been reset.';
+    }
+
+    // Preserve symptoms after form submission
+    window.addEventListener('DOMContentLoaded', function() {
+        // If there are symptoms in the input field, preserve them
+        if (symptomsInput.value) {
+            allSymptoms = symptomsInput.value;
+            transcriptionDiv.textContent = allSymptoms;
+        }
+    });
+    
+    // Also preserve symptoms when the page is loaded with results
+    window.addEventListener('load', function() {
+        if (symptomsInput.value && !allSymptoms) {
+            allSymptoms = symptomsInput.value;
+            transcriptionDiv.textContent = allSymptoms;
+        }
+    });
+</script>
+{% endblock %}

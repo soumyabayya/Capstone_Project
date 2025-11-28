@@ -1,0 +1,87 @@
+Symptom,Diseases
+itching,"Chicken pox, Drug Reaction, Fungal infection, Jaundice, Hepatitis B, Chronic cholestasis"
+skin_rash,"Chicken pox, Drug Reaction, Fungal infection, Impetigo, Acne, Dengue, Psoriasis"
+nodal_skin_eruptions,Fungal infection
+dischromic _patches,Fungal infection
+continuous_sneezing,"Allergy, Common Cold"
+shivering,Allergy
+chills,"Common Cold, Tuberculosis, Allergy, Malaria, Pneumonia, Dengue, Typhoid"
+watering_from_eyes,Allergy
+stomach_pain,"Drug Reaction, GERD"
+acidity,"Migraine, GERD"
+ulcers_on_tongue,GERD
+vomiting,"Paralysis (brain hemorrhage), Heart attack, Peptic ulcer diseae, GERD, Hepatitis E, Gastroenteritis, Tuberculosis, Hypoglycemia, Malaria, Hepatitis D, hepatitis A, Jaundice, Alcoholic hepatitis, Chronic cholestasis, Dengue, Typhoid, (vertigo) Paroymsal  Positional Vertigo"
+cough,"Bronchial Asthma, Common Cold, GERD, Tuberculosis, Pneumonia"
+yellowish_skin,"Hepatitis E, Hepatitis C, Hepatitis D, hepatitis A, Alcoholic hepatitis, Hepatitis B, Chronic cholestasis"
+nausea,"hepatitis A, Chronic cholestasis, Hepatitis C, (vertigo) Paroymsal  Positional Vertigo"
+loss_of_appetite,"Chronic cholestasis, Peptic ulcer diseae, Hepatitis C"
+burning_micturition,"Drug Reaction, Urinary tract infection"
+spotting_ urination,Drug Reaction
+abdominal_pain,"Peptic ulcer diseae, Alcoholic hepatitis"
+passage_of_gases,Peptic ulcer diseae
+indigestion,"Migraine, Peptic ulcer diseae"
+muscle_wasting,AIDS
+patches_in_throat,AIDS
+high_fever,"Bronchial Asthma, Chicken pox, Hepatitis E, AIDS, Common Cold, Malaria, Impetigo, Jaundice, Pneumonia, Typhoid"
+extra_marital_contacts,AIDS
+fatigue,"Hypoglycemia, Bronchial Asthma, Chicken pox, Hepatitis C, Hepatitis E, Tuberculosis, Common Cold, Hepatitis D, Typhoid, Jaundice, Hepatitis B, Pneumonia, Hypothyroidism, Varicose veins, Dengue, Diabetes , Hyperthyroidism"
+weight_loss,"Jaundice, Diabetes , Tuberculosis, Hyperthyroidism"
+restlessness,"Hyperthyroidism, Diabetes "
+lethargy,"Chicken pox, Diabetes , Hepatitis B, Hypothyroidism"
+irregular_sugar_level,Diabetes 
+sunken_eyes,Gastroenteritis
+dehydration,Gastroenteritis
+diarrhoea,Gastroenteritis
+breathlessness,"Heart attack, Bronchial Asthma, Pneumonia"
+family_history,Bronchial Asthma
+headache,"Paralysis (brain hemorrhage), Hypoglycemia, Malaria, Hypertension , Migraine, Typhoid, (vertigo) Paroymsal  Positional Vertigo"
+chest_pain,"Heart attack, Hypertension "
+dizziness,"Hypertension , Cervical spondylosis"
+loss_of_balance,"(vertigo) Paroymsal  Positional Vertigo, Hypertension , Cervical spondylosis"
+lack_of_concentration,Hypertension 
+blurred_and_distorted_vision,Migraine
+excessive_hunger,Migraine
+back_pain,Cervical spondylosis
+weakness_in_limbs,Cervical spondylosis
+neck_pain,"Osteoarthristis, Cervical spondylosis"
+weakness_of_one_body_side,Paralysis (brain hemorrhage)
+altered_sensorium,Paralysis (brain hemorrhage)
+sweating,"Heart attack, Malaria, Hypoglycemia, Hyperthyroidism"
+joint_pain,"Osteoarthristis, Hepatitis E, Hepatitis D, hepatitis A, Dengue, Psoriasis"
+dark_urine,"Hepatitis D, hepatitis A, Hepatitis B"
+yellowing_of_eyes,Hepatitis C
+swelling_of_stomach,Alcoholic hepatitis
+distention_of_abdomen,Alcoholic hepatitis
+constipation,Dimorphic hemmorhoids(piles)
+pain_during_bowel_movements,Dimorphic hemmorhoids(piles)
+pain_in_anal_region,Dimorphic hemmorhoids(piles)
+bloody_stool,Dimorphic hemmorhoids(piles)
+irritation_in_anus,Dimorphic hemmorhoids(piles)
+cramps,Varicose veins
+bruising,Varicose veins
+obesity,Varicose veins
+swollen_legs,Varicose veins
+weight_gain,Hypothyroidism
+cold_hands_and_feets,Hypothyroidism
+mood_swings,"Hyperthyroidism, Hypothyroidism"
+anxiety,Hypoglycemia
+knee_pain,Osteoarthristis
+hip_joint_pain,Osteoarthristis
+swelling_joints,"Osteoarthristis, Arthritis"
+muscle_weakness,Arthritis
+stiff_neck,Arthritis
+movement_stiffness,Arthritis
+painful_walking,Arthritis
+spinning_movements,(vertigo) Paroymsal  Positional Vertigo
+pus_filled_pimples,Acne
+blackheads,Acne
+scurring,Acne
+bladder_discomfort,Urinary tract infection
+foul_smell_of urine,Urinary tract infection
+continuous_feel_of_urine,Urinary tract infection
+skin_peeling,Psoriasis
+silver_like_dusting,Psoriasis
+small_dents_in_nails,Psoriasis
+blister,Impetigo
+red_sore_around_nose,Impetigo
+yellow_crust_ooze,Impetigo
